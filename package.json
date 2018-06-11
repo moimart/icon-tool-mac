@@ -1,0 +1,28 @@
+{
+  "name": "icon-tool-mac",
+  "version": "0.0.1",
+  "description": "Create .icns with macOS iconutil",
+  "main": "dist/index.js",
+  "bin": {
+    "make-icns": "./bin/make-icns"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "preferGlobal": true,
+  "author": "Moises Martinez <moises@kikkei.com>",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "@types/node": "^10.3.2",
+    "ts-loader": "^4.4.1",
+    "typescript": "^2.9.1",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.3"
+  },
+  "dependencies": {
+    "@types/jimp": "^0.2.28",
+    "@types/rimraf": "^2.0.2",
+    "jimp": "^0.2.28",
+    "rimraf": "^2.6.2"
+  }
+}
