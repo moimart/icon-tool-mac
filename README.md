@@ -9,7 +9,7 @@ TypeScript tool to create .icns with macOS icontool
 
 `$ yarn build`
 
-`$ bin/make-icns icon [output-name]`
+`$ bin/make-icns iconfile.png [output-name]`
 
 # Installing
 
@@ -17,4 +17,8 @@ TypeScript tool to create .icns with macOS icontool
 
 or
 
-`$ npm install -g icon-tool mac`
+`$ npm install -g icon-tool-mac`
+
+# Usage when installed globally
+
+`$ make-icns iconfile.png [output-name]`
