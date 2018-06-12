@@ -1,13 +1,13 @@
 {
   "name": "icon-tool-mac",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create .icns with macOS iconutil",
   "main": "dist/index.js",
   "bin": {
     "make-icns": "./bin/make-icns"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "node_modules/webpack-cli/bin/cli.js",
     "postinstall": "yarn build"
   },
   "preferGlobal": true,
