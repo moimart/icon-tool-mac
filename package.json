@@ -1,6 +1,6 @@
 {
   "name": "icon-tool-mac",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create .icns with macOS iconutil",
   "main": "dist/index.js",
   "bin": {
@@ -10,6 +10,11 @@
     "build": "node_modules/webpack-cli/bin/cli.js",
     "postinstall": "yarn build"
   },
+  "keywords": [
+    "icns",
+    "mac",
+    "icon"
+  ],
   "preferGlobal": true,
   "author": "Moises Martinez <moises@kikkei.com>",
   "license": "BSD-2-Clause",
