@@ -1,6 +1,6 @@
 {
   "name": "icon-tool-mac",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Create .icns with macOS iconutil",
   "main": "dist/index.js",
   "bin": {
@@ -15,6 +15,10 @@
     "mac",
     "icon"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moimart/icon-tool-mac.git"
+  },
   "preferGlobal": true,
   "author": "Moises Martinez <moises@kikkei.com>",
   "license": "BSD-2-Clause",
