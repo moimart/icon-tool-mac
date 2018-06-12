@@ -62,29 +62,20 @@ class CreateIcon {
           jimp.read(realFile)
           .then((res:Jimp.Jimp) => {
             if (res.bitmap.width != res.bitmap.height) {
-              return reject('file resolution must be width = height');
+              return reject('width resolution must equal as height.');
             }
 
-            if (res.bitmap.width < 16) {
-              return reject('file resolution is too small');
+            if (res.bitmap.width < 128) {
+              return reject('file resolution is too small; minimum 128x128; recommended 1024x1024.');
             }
 
             let tmpPath = '/tmp/' + this.random() + '.iconset';
 
             this.createTmpFiles(tmpPath,res);
 
-            let cmd = `/usr/bin/iconutil -c icns --output "${this.output}" "${tmpPath}"`;
-
-            exec(cmd, (err,stdout,stderr) => {
-
-              if (stderr) {
-                return reject(stderr + cmd);
-              }
-
-              rimraf(tmpPath,()=>{});
-              resolve(this.output);
-            });
-
+            setTimeout(()=>{
+              this.createIcns(tmpPath,resolve,reject);
+            },500);
           })
           .catch(err => reject(err));
         } catch(exception) {
@@ -94,7 +85,21 @@ class CreateIcon {
     });
   }
 
-  private createTmpFiles(tmpPath:string, image:Jimp.Jimp) {
+  private createIcns(tmpPath:string, resolve:any, reject:any) {
+    let cmd = `/usr/bin/iconutil -c icns --output "${this.output}" "${tmpPath}"`;
+
+    exec(cmd, (err,stdout,stderr) => {
+
+      if (stderr) {
+        return reject(stderr + cmd);
+      }
+
+      rimraf(tmpPath,()=>{});
+      resolve(this.output);
+    });
+  }
+
+  private async createTmpFiles(tmpPath:string, image:Jimp.Jimp) {
     if (!fs.existsSync(tmpPath)){
       fs.mkdirSync(tmpPath);
     }
@@ -104,12 +109,11 @@ class CreateIcon {
     for (let desc of descriptors) {
       let file = path.join(tmpPath,`icon_${desc.tag}.png`);
 
-      image
+      await image
       .resize(desc.size,desc.size)
       .write(file);
     }
   }
-
 }
 
 if (process.argv.length < 3) {
