@@ -109,7 +109,7 @@ class CreateIcon {
     for (let desc of descriptors) {
       let file = path.join(tmpPath,`icon_${desc.tag}.png`);
 
-      await image
+      await image.clone()
       .resize(desc.size,desc.size)
       .write(file);
     }
@@ -120,7 +120,7 @@ if (process.argv.length < 3) {
   console.error('Please specify a file');
 } else {
   let output = "icon.icns";
-  
+
   if (process.argv.length <= 4) {
     output = process.argv[3] + ".icns";
   }
