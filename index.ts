@@ -120,6 +120,7 @@ if (process.argv.length < 3) {
   console.error('Please specify a file');
 } else {
   let output = "icon.icns";
+  
   if (process.argv.length <= 4) {
     output = process.argv[3] + ".icns";
   }
