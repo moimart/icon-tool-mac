@@ -112,8 +112,9 @@ class CreateIcon {
         const write = promisfyNoError(scaledImage.write,scaledImage);
 
         await write(file);
-        resolve();
       }
+
+      resolve();
     });
   }
 }
