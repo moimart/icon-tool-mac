@@ -33,6 +33,7 @@ class IconDescriptor {
 class CreateIcon {
   private file?: string;
   private output?: string;
+  private writeFileCounter: number = 0;
 
   constructor(file: string, output: string) {
     this.file = file;
@@ -52,40 +53,37 @@ class CreateIcon {
   public convert(): Promise<string> {
     let realFile = path.resolve(this.file)
 
-    return new Promise<string>((resolve,reject) => {
-      fs.exists(realFile, (test:boolean) => {
-        if (!test) {
-          return reject('file not found');
-        }
+    return new Promise<string>(async (resolve,reject) => {
 
+      if (fs.existsSync(realFile)) {
         try {
-          jimp.read(realFile)
-          .then((res:Jimp.Jimp) => {
-            if (res.bitmap.width != res.bitmap.height) {
-              return reject('width resolution must equal as height.');
-            }
+          const res = await jimp.read(realFile);
 
-            if (res.bitmap.width < 128) {
-              return reject('file resolution is too small; minimum 128x128; recommended 1024x1024.');
-            }
+          if (res.bitmap.width != res.bitmap.height) {
+            return reject('width resolution must equal as height.');
+          }
 
-            let tmpPath = '/tmp/' + this.random() + '.iconset';
+          if (res.bitmap.width < 128) {
+            return reject('file resolution is too small; minimum 128x128; recommended 1024x1024.');
+          }
 
-            this.createTmpFiles(tmpPath,res);
+          let tmpPath = '/tmp/' + this.random() + '.iconset';
 
-            setTimeout(()=>{
-              this.createIcns(tmpPath,resolve,reject);
-            },500);
-          })
-          .catch(err => reject(err));
-        } catch(exception) {
-          reject('wrong file format');
+          await this.createTmpFiles(tmpPath,res);
+          this.createIcns(tmpPath,resolve,reject);
+
+        } catch (exception) {
+          reject('Error when processing the image ' + exception);
         }
-      });
+
+      } else {
+        reject('File not found');
+      }
+
     });
   }
 
-  private createIcns(tmpPath:string, resolve:any, reject:any) {
+  private createIcns(tmpPath:string, resolve, reject) {
     let cmd = `/usr/bin/iconutil -c icns --output "${this.output}" "${tmpPath}"`;
 
     exec(cmd, (err,stdout,stderr) => {
@@ -94,25 +92,33 @@ class CreateIcon {
         return reject(stderr + cmd);
       }
 
-      rimraf(tmpPath,()=>{});
       resolve(this.output);
     });
   }
 
-  private async createTmpFiles(tmpPath:string, image:Jimp.Jimp) {
+  private createTmpFiles(tmpPath:string, image:Jimp.Jimp): Promise<void> {
     if (!fs.existsSync(tmpPath)){
       fs.mkdirSync(tmpPath);
     }
 
     let descriptors = IconDescriptor.createDescriptors();
 
-    for (let desc of descriptors) {
-      let file = path.join(tmpPath,`icon_${desc.tag}.png`);
+    return new Promise<void>((resolve,reject) => {
+      for (let desc of descriptors) {
+        let file = path.join(tmpPath,`icon_${desc.tag}.png`);
 
-      await image.clone()
-      .resize(desc.size,desc.size)
-      .write(file);
-    }
+        image.clone()
+        .resize(desc.size,desc.size)
+        .write(file, (image) => {
+          this.writeFileCounter++;
+
+          if (this.writeFileCounter == descriptors.length) {
+            this.writeFileCounter = 0;
+            resolve();
+          }
+        });
+      }
+    });
   }
 }
 
