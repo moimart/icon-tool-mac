@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as jimp from 'jimp';
 import * as rimraf from 'rimraf';
+import { promisfyNoError } from 'promisfy';
 
 class IconDescriptor {
   public size: number = 0;
@@ -33,7 +34,6 @@ class IconDescriptor {
 class CreateIcon {
   private file?: string;
   private output?: string;
-  private writeFileCounter: number = 0;
 
   constructor(file: string, output: string) {
     this.file = file;
@@ -92,6 +92,7 @@ class CreateIcon {
         return reject(stderr + cmd);
       }
 
+      rimraf(tmpPath,()=>{});
       resolve(this.output);
     });
   }
@@ -103,20 +104,15 @@ class CreateIcon {
 
     let descriptors = IconDescriptor.createDescriptors();
 
-    return new Promise<void>((resolve,reject) => {
+    return new Promise<void>(async (resolve,reject) => {
       for (let desc of descriptors) {
         let file = path.join(tmpPath,`icon_${desc.tag}.png`);
 
-        image.clone()
-        .resize(desc.size,desc.size)
-        .write(file, (image) => {
-          this.writeFileCounter++;
+        const scaledImage = image.clone().resize(desc.size,desc.size);
+        const write = promisfyNoError(scaledImage.write,scaledImage);
 
-          if (this.writeFileCounter == descriptors.length) {
-            this.writeFileCounter = 0;
-            resolve();
-          }
-        });
+        await write(file);
+        resolve();
       }
     });
   }
