@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 
-module.exports = {
+module.exports = [{
     target: 'node',
     mode: "production",
     externals: [
@@ -28,4 +28,32 @@ module.exports = {
             'node_modules'
         ]
     }
-};
+},
+{
+    target: 'node',
+    mode: "production",
+    externals: [
+      /^[a-z\-0-9]+$/ // Ignore node_modules folder
+    ],
+    output: {
+        filename: 'index.js', // output file
+        path: __dirname,
+        libraryTarget: "commonjs"
+    },
+    entry: './lib/IconCreator.ts',
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader'
+            }
+        ]
+    },
+    resolve: {
+        extensions: [ '.ts', '.tsx', '.js' ],
+        modules: [
+            path.join(__dirname,"/node_modules"),
+            'node_modules'
+        ]
+    }
+}]
