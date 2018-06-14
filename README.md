@@ -48,7 +48,7 @@ creator.convert()
 # JavaScript
 
 ```
-const IconCreator = require('icon-tool-mac');
+const IconCreator = require('icon-tool-mac').IconCreator;
 
 let creator = new IconCreator(source_png);
 
