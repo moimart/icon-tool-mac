@@ -42,12 +42,14 @@ export class IconCreator {
   private output?: string;
   private useBuffer: boolean = false;
 
-  constructor(file: string, output: string, toBuffer?: boolean) {
+  constructor(file: string, output?: string) {
     this.file = file;
-    this.output = path.resolve(output);
 
-    if (toBuffer) {
-      this.useBuffer = toBuffer;
+    if (output) {
+      this.output = path.resolve(output);
+    } else {
+      this.output = '/tmp/tmpIcon' + this.random() + '.icns';
+      this.useBuffer = true;
     }
   }
 
