@@ -33,7 +33,7 @@ or
 
 # TypeScript
 
-`
+```
 import { IconCreator } from 'icon-tool-mac';
 
 let creator = new IconCreator(source_png);
@@ -43,11 +43,11 @@ creator.convert()
   // .. do something with the .icns buffer
 })
 .catch((error: string) => console.error(error));
-`
+```
 
 #JavaScript
 
-`
+```
 const IconCreator = require('icon-tool-mac');
 
 let creator = new IconCreator(source_png);
@@ -57,4 +57,4 @@ creator.convert()
   // .. do something with the .icns buffer
 })
 .catch((error: string) => console.error(error));
-`
+```
