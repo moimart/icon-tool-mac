@@ -45,7 +45,7 @@ creator.convert()
 .catch((error: string) => console.error(error));
 ```
 
-#JavaScript
+# JavaScript
 
 ```
 const IconCreator = require('icon-tool-mac');
