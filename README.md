@@ -56,5 +56,5 @@ creator.convert()
 .then((icon) => {
   // .. do something with the .icns buffer
 })
-.catch((error: string) => console.error(error));
+.catch(error => console.error(error));
 ```
