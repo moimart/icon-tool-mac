@@ -1,15 +1,8 @@
-import { exec } from 'child_process';
 import * as path from 'path';
-import * as _fs from 'fs';
 import * as jimp from 'jimp';
-import * as rimraf from 'rimraf';
-import { promisfy, promisfyNoError } from 'promisfy';
-
-var fs = {
-  readFile : promisfy(_fs.readFile),
-  exists: promisfyNoError(_fs.exists),
-  mkdir: promisfy(_fs.mkdir)
-};
+import { promisfyNoError } from 'promisfy';
+import * as Utils from './Utils';
+import * as Icns from './IcnsWriter';
 
 class IconDescriptor {
   public size: number = 0;
@@ -68,7 +61,7 @@ export class IconCreator {
 
     return new Promise<string>(async (resolve,reject) => {
 
-      if (await fs.exists(realFile)) {
+      if (await Utils.fs.exists(realFile)) {
         try {
           const res = await jimp.read(realFile);
 
@@ -96,24 +89,16 @@ export class IconCreator {
     });
   }
 
-  private createIcns(tmpPath:string, resolve, reject) {
-    let cmd = `/usr/bin/iconutil -c icns --output ${this.output} ${tmpPath}`;
+  private async createIcns(tmpPath:string, resolve, reject) {
+    let writer = new Icns.IconWriterCLI(tmpPath,this.output);
 
-    exec(cmd, (err,stdout,stderr) => {
+    const res = await writer.write().catch(error => reject(error));
 
-      if (stderr) {
-        reject(`${stderr} ${cmd}`);
-      }
-
-      if (!this.useBuffer) {
-        rimraf(tmpPath,()=>{});
-        resolve(this.output);
-      } else {
-        const res = fs.readFile(this.output).catch(error => reject(error));
-        resolve(res);
-      }
-
-    });
+    if (res instanceof Buffer) {
+      resolve(res);
+    } else {
+      resolve(this.output);
+    }
   }
 
   private async createTmpFiles(tmpPath:string, image:Jimp.Jimp): Promise<void> {
@@ -122,8 +107,8 @@ export class IconCreator {
 
     return new Promise<void>(async (resolve,reject) => {
 
-      if (!await fs.exists(tmpPath)) {
-        await fs.mkdir(tmpPath).catch(error => reject());
+      if (!await Utils.fs.exists(tmpPath)) {
+        await Utils.fs.mkdir(tmpPath).catch(error => reject());
       }
 
       for (let desc of descriptors) {
