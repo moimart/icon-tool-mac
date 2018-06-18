@@ -8,7 +8,7 @@ export class IconWriterNative extends IconWriter {
 
   write(): Promise<void | Buffer> {
 
-    return new Promise<void>((resolve,reject) => {
+    return new Promise<void | Buffer>((resolve,reject) => {
       if (!this.useBuffer) {
         resolve();
       } else {

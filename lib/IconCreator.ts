@@ -111,14 +111,15 @@ export class IconCreator {
         await Utils.fs.mkdir(tmpPath).catch(error => reject());
       }
 
+      let promises = new Array<any>();
       for (let desc of descriptors) {
         let file = path.join(tmpPath,`icon_${desc.tag}.png`);
-
         const scaledImage = image.clone().resize(desc.size,desc.size);
         const write = promisfyNoError(scaledImage.write,scaledImage);
-
-        await write(file);
+        promises.push(write(file));
       }
+
+      await Promise.all(promises);
 
       resolve();
     });
