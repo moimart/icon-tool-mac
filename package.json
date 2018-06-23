@@ -1,6 +1,6 @@
 {
   "name": "icon-tool-mac",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Create .icns in any platform",
   "main": "dist/index.js",
   "bin": {

@@ -2,6 +2,7 @@ import { IconWriter } from './IcnsWriter';
 import * as Utils from './Utils';
 import * as path from 'path';
 import * as bplistCreator from 'bplist-creator';
+import * as rimraf from 'rimraf';
 
 const infoplist = [
     {
@@ -122,6 +123,8 @@ export class IconWriterNative extends IconWriter {
 
       buf.writeUInt32BE(bytesWritten, 4);
       const newBuffer = Buffer.concat(allBuffers);
+
+      rimraf(this.pathToFolder,()=>{}); //Delete the tmp files
 
       if (!this.useBuffer && this.outputFile) {
         await Utils.fs.writeFile(this.outputFile,newBuffer).catch(err => reject());

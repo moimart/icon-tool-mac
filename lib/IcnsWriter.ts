@@ -38,7 +38,7 @@ export class IconWriterCLI extends IconWriter {
         }
 
         if (!this.useBuffer) {
-          //rimraf(this.pathToFolder,()=>{});
+          rimraf(this.pathToFolder,()=>{});
           resolve();
         } else {
           const res = Utils.fs.readFile(this.outputFile).catch(error => reject(error));
