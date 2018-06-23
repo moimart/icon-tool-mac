@@ -1,7 +1,7 @@
 icon-tool-mac
 ======
 
-TypeScript tool to create .icns with macOS icontool
+TypeScript tool to create .icns with a built-in icns generator or the macOS icontool
 
 # Building and running
 
@@ -45,6 +45,12 @@ creator.convert()
 .catch((error: string) => console.error(error));
 ```
 
+If instead of using the built-in generator, you want to use macOS' iconutil tool do:
+
+```
+creator.setCLI(true);
+```
+
 # JavaScript
 
 ```
@@ -57,4 +63,10 @@ creator.convert()
   // .. do something with the .icns buffer
 })
 .catch(error => console.error(error));
+```
+
+If instead of using the built-in generator, you want to use macOS' iconutil tool do:
+
+```
+creator.setCLI(true);
 ```

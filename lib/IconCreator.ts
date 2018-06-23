@@ -3,6 +3,7 @@ import * as jimp from 'jimp';
 import { promisfyNoError } from 'promisfy';
 import * as Utils from './Utils';
 import * as Icns from './IcnsWriter';
+import { IconWriterNative } from './IcnsWriterNative';
 
 class IconDescriptor {
   public size: number = 0;
@@ -34,6 +35,7 @@ export class IconCreator {
   private file?: string;
   private output?: string;
   private useBuffer: boolean = false;
+  private cli: boolean = false;
 
   constructor(file: string, output?: string) {
     this.file = file;
@@ -44,6 +46,10 @@ export class IconCreator {
       this.output = '/tmp/tmpIcon' + this.random() + '.icns';
       this.useBuffer = true;
     }
+  }
+
+  public useCLI(cli:boolean) {
+    this.cli = cli;
   }
 
   private random(): string {
@@ -90,7 +96,13 @@ export class IconCreator {
   }
 
   private async createIcns(tmpPath:string, resolve, reject) {
-    let writer = new Icns.IconWriterCLI(tmpPath,this.output);
+    let writer:Icns.IconWriter = null;
+
+    if (this.cli) {
+      writer = new Icns.IconWriterCLI(tmpPath,this.output);
+    } else {
+      writer = new IconWriterNative(tmpPath,this.output);
+    }
 
     const res = await writer.write().catch(error => reject(error));
 
@@ -113,7 +125,7 @@ export class IconCreator {
 
       let promises = new Array<any>();
       for (let desc of descriptors) {
-        let file = path.join(tmpPath,`icon_${desc.tag}.png`);
+        const file = path.join(tmpPath,`icon_${desc.tag}.png`);
         const scaledImage = image.clone().resize(desc.size,desc.size);
         const write = promisfyNoError(scaledImage.write,scaledImage);
         promises.push(write(file));
