@@ -1,4 +1,4 @@
-import { IconCreator } from './lib/IconCreator'
+import { IconCreator } from './lib/IconCreatorMemory'
 
 if (process.argv.length < 3) {
   console.error('Please specify a file');

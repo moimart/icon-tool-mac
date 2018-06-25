@@ -55,26 +55,37 @@ class IconEntry {
   private filePath?: string;
   private buffer?: Buffer;
 
-  constructor(filePath: string) {
+  constructor(filePath: string, buffer?: Buffer) {
+
     this.filePath = filePath;
 
-    let size =
-      path
-        .basename(filePath)
-        .substr(0,filePath.length-4)
-        .substr(5);
+    if (buffer) {
+        this.buffer = buffer;
+    }
 
-    size = size.substr(0,size.length - 4);
+    if (iconTypeMap.get(filePath) !== undefined) {
+      this.type = iconTypeMap.get(filePath).iconId;
+    } else {
+      let size =
+        path
+          .basename(filePath)
+          .substr(0,filePath.length-4)
+          .substr(5);
 
-    this.type = iconTypeMap.get(size).iconId;
+      size = size.substr(0,size.length - 4);
+
+      this.type = iconTypeMap.get(size).iconId;
+    }
   }
 
   async init() {
+    if (this.buffer === undefined) {
       const buffer =
         await Utils.fs.readFile(this.filePath)
                         .catch(error => {});
 
       this.buffer = buffer;
+    }
   }
 
   write(): Buffer {
@@ -87,8 +98,12 @@ class IconEntry {
 }
 
 export class IconWriterNative extends IconWriter {
-  constructor(pathToFolder:string, outputFile?: string) {
-    super(pathToFolder,outputFile);
+  private imageBuffers: boolean = false;
+
+  constructor(imagesLocation:string | Map<string,Buffer>, outputFile?: string) {
+    super(imagesLocation,outputFile);
+
+    this.imageBuffers = (typeof this.imagesLocation !== "string");
   }
 
   private writeInfo(): Buffer {
@@ -110,8 +125,16 @@ export class IconWriterNative extends IconWriter {
 
       let allBuffers = new Array<Buffer>(buf);
       for (const type of iconTypeMap.keys()) {
-        let entry = new IconEntry(this.pathToFolder + '/icon_' + type + '.png');
-        await entry.init();
+        let entry = null;
+
+        if (this.imageBuffers) {
+          let map = this.imagesLocation as Map<string,Buffer>;
+          entry = new IconEntry(type,map.get(type));
+        } else {
+          entry = new IconEntry(this.imagesLocation + '/icon_' + type + '.png');
+          await entry.init();
+        }
+
         const entryBuffer = entry.write();
         allBuffers.push(entryBuffer);
         bytesWritten += entryBuffer.length;
@@ -124,7 +147,9 @@ export class IconWriterNative extends IconWriter {
       buf.writeUInt32BE(bytesWritten, 4);
       const newBuffer = Buffer.concat(allBuffers);
 
-      rimraf(this.pathToFolder,()=>{}); //Delete the tmp files
+      if (!this.imageBuffers) {
+        rimraf(this.imagesLocation as string,()=>{}); //Delete the tmp files
+      }
 
       if (!this.useBuffer && this.outputFile) {
         await Utils.fs.writeFile(this.outputFile,newBuffer).catch(err => reject());

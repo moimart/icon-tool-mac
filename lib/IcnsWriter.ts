@@ -4,12 +4,12 @@ import * as Utils from './Utils';
 import * as rimraf from 'rimraf';
 
 export abstract class IconWriter {
-  protected pathToFolder?: string;
+  protected imagesLocation?: string | Map<string,Buffer>;
   protected outputFile: string = "";
   protected useBuffer: boolean = false;
 
-  constructor(pathToFolder:string, outputFile?: string) {
-    this.pathToFolder = pathToFolder;
+  constructor(imagesLocation:string | Map<string,Buffer>, outputFile?: string) {
+    this.imagesLocation = imagesLocation as string;
 
     if (outputFile) {
       this.outputFile = outputFile;
@@ -22,14 +22,14 @@ export abstract class IconWriter {
 }
 
 export class IconWriterCLI extends IconWriter {
-  constructor(pathToFolder:string, outputFile?: string) {
-    super(pathToFolder,outputFile);
+  constructor(imagesLocation:string, outputFile?: string) {
+    super(imagesLocation,outputFile);
   }
 
   write(): Promise<void | Buffer> {
 
     return new Promise<void>((resolve,reject) => {
-      let cmd = `/usr/bin/iconutil -c icns --output ${this.outputFile} ${this.pathToFolder}`;
+      let cmd = `/usr/bin/iconutil -c icns --output ${this.outputFile} ${this.imagesLocation}`;
 
       exec(cmd, (err,stdout,stderr) => {
 
@@ -38,7 +38,7 @@ export class IconWriterCLI extends IconWriter {
         }
 
         if (!this.useBuffer) {
-          rimraf(this.pathToFolder,()=>{});
+          rimraf(this.imagesLocation as string,()=>{});
           resolve();
         } else {
           const res = Utils.fs.readFile(this.outputFile).catch(error => reject(error));
