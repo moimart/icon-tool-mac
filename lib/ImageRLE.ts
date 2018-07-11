@@ -1,4 +1,40 @@
 export class ImageRLE {
+  static decodeRLE(data:Buffer, pixelCount:number):Buffer {
+
+    let colorOffset = 0;
+    let colorValue = 0; //byte
+    let runLength = 0;
+    let dataOffset = 4;
+    let pixelOffset = 0;
+    let rawDataSize = data.length - 4;
+    let expectedPixelCount = pixelCount*pixelCount;
+    let destIconData = Buffer.alloc(expectedPixelCount*4);
+
+    for (colorOffset = 0; colorOffset < 3; colorOffset++) {
+      pixelOffset = 0;
+      while ((pixelOffset < expectedPixelCount) && (dataOffset < rawDataSize)) {
+        if ((data[dataOffset] & 0x80) == 0) {
+          runLength = (0xFF & data[dataOffset++]) + 1;
+
+          for (let i = 0; (i < runLength) && (pixelOffset < expectedPixelCount) && (dataOffset < rawDataSize); i++) {
+            destIconData[(pixelOffset * 4) + colorOffset] = data[dataOffset++];
+            pixelOffset++;
+          }
+        } else {
+          runLength = (0xFF & data[dataOffset++]) - 125;
+          colorValue = data[dataOffset++];
+
+          for (let i = 0; (i < runLength) && (pixelOffset < expectedPixelCount); i++) {
+            destIconData[(pixelOffset * 4) + colorOffset] = colorValue;
+            pixelOffset++
+          }
+        }
+      }
+    }
+
+    return destIconData;
+  }
+
   static encodeRLE(data: Buffer): Buffer {
     let dataInCount = 0;
     let dataInChanSize = 0;
