@@ -1,5 +1,5 @@
 export class ImageRLE {
-  static decodeRLE(data:Buffer, pixelCount:number):Buffer {
+  static decodeRLE(data:Buffer, expectedPixelCount:number):Buffer {
 
     let colorOffset = 0;
     let colorValue = 0; //byte
@@ -7,7 +7,6 @@ export class ImageRLE {
     let dataOffset = 4;
     let pixelOffset = 0;
     let rawDataSize = data.length - 4;
-    let expectedPixelCount = pixelCount*pixelCount;
     let destIconData = Buffer.alloc(expectedPixelCount*4);
 
     for (colorOffset = 0; colorOffset < 3; colorOffset++) {
@@ -57,7 +56,7 @@ export class ImageRLE {
       dataTempCount = 4;
     }
 
-    for (colorOffset = 0; colorOffset < 3; colorOffset++) {
+    for (colorOffset = 0; colorOffset < 4; colorOffset++) {
 
       runCount = 0;
       dataRun[0] = data[colorOffset];
@@ -148,17 +147,19 @@ export class ImageRLE {
       if (runLength > 0) {
 
         if (runType == 0) {
+
           dataTemp[dataTempCount] = runLength - 1;
           dataTempCount++;
 
           dataRun.copy(dataTemp,dataTempCount,0,runLength);
           dataTempCount = dataTempCount + runLength;
+
         } else if (runType == 1) {
 
           dataTemp[dataTempCount] = runLength + 125;
           dataTempCount++;
 
-          dataTemp[dataTempCount] = dataRun[9];
+          dataTemp[dataTempCount] = dataRun[0];
           dataTempCount++;
         }
 

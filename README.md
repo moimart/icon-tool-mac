@@ -3,6 +3,8 @@ icon-tool-mac
 
 TypeScript tool to create .icns with a built-in icns generator or the macOS icontool
 
+Supports PNG and RLE-encoded image formats
+
 # Building and running
 
 `$ yarn install`
@@ -45,11 +47,6 @@ creator.convert()
 .catch((error: string) => console.error(error));
 ```
 
-If instead of using the built-in generator, you want to use macOS' iconutil tool do:
-
-```
-creator.setCLI(true);
-```
 
 # JavaScript
 
@@ -65,8 +62,6 @@ creator.convert()
 .catch(error => console.error(error));
 ```
 
-If instead of using the built-in generator, you want to use macOS' iconutil tool do:
+# Alternative Implementations
 
-```
-creator.setCLI(true);
-```
+Check the /lib/ folder to find other implementations relying on the icontool generator provided by macOS
