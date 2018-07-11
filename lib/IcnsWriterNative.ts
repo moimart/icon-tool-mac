@@ -47,7 +47,7 @@ let iconTypeMap = new Map([
   [ "512x512",    new MetaIconEntry("ic09",512) ],
   [ "32x32",      new MetaIconEntry("ic05",32) ],
   [ "512x512@2x",  new MetaIconEntry("ic10",1024) ],
-  [ "16x16@2x",   new MetaIconEntry("ic11",32) ],
+  [ "16x16@2x",   new MetaIconEntry("ic05",32) ],
 ]);
 
 class IconEntry {

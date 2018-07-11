@@ -1,3 +1,4 @@
+import { IconDescriptor, IconCreator } from './IconCreator';
 import * as path from 'path';
 import * as jimp from 'jimp';
 import { promisfyNoError, promisfy } from 'promisfy';
@@ -5,40 +6,13 @@ import * as Utils from './Utils';
 import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
 
-class IconDescriptor {
-  public size: number = 0;
-  public tag: string = "";
-
-  constructor(size: number, tag: string) {
-    this.size = size;
-    this.tag = tag;
-  }
-
-  public static createDescriptors(): Array<IconDescriptor> {
-    let descs: Array<IconDescriptor> = new Array<IconDescriptor>();
-
-    for (let i = 16; i <= 512; i *= 2) {
-      descs.push(new IconDescriptor(i,`${i}x${i}`));
-
-      if (i != 16) {
-        descs.push(new IconDescriptor(i,`${i/2}x${i/2}@2x`));
-      }
-    }
-
-    descs.push(new IconDescriptor(1024,"512x512@2x"));
-
-    return descs;
-  }
-}
-
-export class IconCreator {
-  private file?: string;
+export class IconCreatorMemory extends IconCreator { 
   private useBuffer: boolean = false;
   private buffers: Map<string,Buffer> = new Map<string,Buffer>();
   private output?: string;
 
   constructor(file: string, output?: string) {
-    this.file = file;
+    super(file,output);
 
     if (output) {
       this.output = path.resolve(output);

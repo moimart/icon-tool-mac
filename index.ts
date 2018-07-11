@@ -1,4 +1,5 @@
-import { IconCreator } from './lib/IconCreatorMemory'
+import { IconCreator } from './lib/IconCreator';
+import { IconCreatorSharp } from './lib/IconCreatorSharp';
 
 if (process.argv.length < 3) {
   console.error('Please specify a file');
@@ -9,7 +10,7 @@ if (process.argv.length < 3) {
     output = process.argv[3] + ".icns";
   }
 
-  let creator = new IconCreator(process.argv[2],output);
+  let creator:IconCreator = new IconCreatorSharp(process.argv[2],output);
 
   creator.convert()
   .then((icon: string) => {
