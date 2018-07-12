@@ -3,7 +3,7 @@ icon-tool-mac
 
 TypeScript tool to create .icns with a built-in icns generator or the macOS icontool
 
-Supports PNG and RLE-encoded image formats
+Supports PNG, SVG and many formats for input. outputs icns files with PNG and RLE-encoded image formats
 
 # Building and running
 

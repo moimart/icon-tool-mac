@@ -191,9 +191,10 @@ export class ImageRLE {
       }
     }
 
-    let nb = Buffer.alloc(dataTempCount);
-    dataTemp.copy(nb,0,0,dataTempCount);
+    let returnBuffer = Buffer.alloc(4 + dataTempCount);
+    returnBuffer.write('ARGB');
+    dataTemp.copy(returnBuffer,4,0,dataTempCount);
 
-    return Buffer.concat([Buffer.from('ARGB','ascii'),nb]);
+    return returnBuffer;
   }
 }
