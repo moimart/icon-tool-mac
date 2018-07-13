@@ -1,4 +1,4 @@
-declare module "IconCreator" {
+declare namespace Icns {
 
   declare class IconCreatorSharp {
 
@@ -17,5 +17,11 @@ declare module "IconCreator" {
 
     constructor(file: string, output?: string);
     public convert(): Promise<string | Buffer>;
+  }
+}
+
+declare module "IconCreator" {
+  export = {
+    IconCreatorSharp: Icns.IconCreatorSharp
   }
 }

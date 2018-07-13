@@ -40,7 +40,7 @@ module.exports = [{
         path: __dirname,
         libraryTarget: "commonjs"
     },
-    entry: './lib/IconCreator.ts',
+    entry: './lib/index.ts',
     module: {
         rules: [
             {
