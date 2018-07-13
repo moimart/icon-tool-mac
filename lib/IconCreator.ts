@@ -32,9 +32,14 @@ export class IconDescriptor {
 
 export abstract class IconCreator {
   protected file?: string;
+  protected buffer: Buffer = null;
 
-  constructor(file: string, output?: string) {
-    this.file = file;
+  constructor(file: string | Buffer, output?: string) {
+    if (file instanceof Buffer) {
+      this.buffer = file as Buffer;
+    } else {
+      this.file = file as string;
+    }
   }
 
   public abstract convert(): Promise<string | Buffer>;
