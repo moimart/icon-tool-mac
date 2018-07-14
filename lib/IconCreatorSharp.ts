@@ -1,7 +1,6 @@
 import { IconDescriptor, IconCreator } from './IconCreator';
 import * as path from 'path';
 import * as sharp from 'sharp';
-import { promisfyNoError, promisfy } from 'promisfy';
 import * as Utils from './Utils';
 import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
