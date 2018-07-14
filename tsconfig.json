@@ -2,7 +2,9 @@
     "compilerOptions": {
         "module": "commonjs",
         "sourceMap": true,
-         "target": "es2015"
+        "target": "es2015",
+        "declaration" : true,
+        "declarationDir": "dist/types",
     },
     "exclude": [
         "node_modules",
