@@ -94,10 +94,7 @@ export class IconCreatorSharp extends IconCreator {
 
   private async createBuffers(image:sharp.SharpInstance) {
 
-    let descriptors = IconDescriptor.createDescriptors();
-
-    let promises = new Array<any>();
-    for (let desc of descriptors) {
+    for (let desc of IconDescriptor.createDescriptors()) {
       const scaledImage = image.clone().resize(desc.size,desc.size);
       if (desc.tag == "16x16" || desc.tag === "16x16@2x") {
         let buffer = await scaledImage.raw().toBuffer().catch(() => {}) as Buffer;
