@@ -31,7 +31,7 @@ export class IconDescriptor {
 }
 
 export abstract class IconCreator {
-  protected file?: string;
+  protected file: string = "";
   protected buffer: Buffer = null;
 
   constructor(file: string | Buffer, output?: string) {
