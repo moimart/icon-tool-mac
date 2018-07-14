@@ -36,9 +36,9 @@ or
 # TypeScript
 
 ```
-import { IconCreator } from 'icon-tool-mac';
+import { IconCreatorSharp } from 'icon-tool-mac';
 
-let creator = new IconCreator(source_png);
+let creator = new IconCreatorSharp(source_file);
 
 creator.convert()
 .then((icon: Buffer) => {
@@ -51,9 +51,9 @@ creator.convert()
 # JavaScript
 
 ```
-const IconCreator = require('icon-tool-mac').IconCreator;
+const IconCreatorSharp = require('icon-tool-mac').IconCreatorSharp;
 
-let creator = new IconCreator(source_png);
+let creator = new IconCreator(source_file);
 
 creator.convert()
 .then((icon) => {
