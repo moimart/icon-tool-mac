@@ -6,10 +6,12 @@ import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
 import { ImageRLE } from './ImageRLE';
 
+export type ManipulationCallback = (image:sharp.SharpInstance) => void;
 export class IconCreatorSharp extends IconCreator {
   private useBuffer: boolean = false;
   private buffers: Map<string,Buffer> = new Map<string,Buffer>();
   private output?: string;
+  private manipulation: ManipulationCallback = null;
 
   constructor(file: string | Buffer, output?: string) {
     super(file,output);
@@ -19,6 +21,10 @@ export class IconCreatorSharp extends IconCreator {
     } else {
       this.useBuffer = true;
     }
+  }
+
+  public setImageManipulation(callback:ManipulationCallback) {
+    this.manipulation = callback;
   }
 
   public convert(): Promise<string | Buffer> {
@@ -36,6 +42,10 @@ export class IconCreatorSharp extends IconCreator {
             image = sharp(realFile,{ density: 500 });
           }
 
+          if (this.manipulation !== null) {
+            this.manipulation(image);
+          }
+          
           const metadata:sharp.Metadata = await image.metadata().catch(err => reject(err)) as sharp.Metadata;
 
           if (metadata.format !== "svg") {

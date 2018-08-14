@@ -46,7 +46,16 @@ creator.convert()
 })
 .catch((error: string) => console.error(error));
 ```
+If you want to do additional image manipulations before creating the .icns:
 
+```
+//Additional import
+import { SharpInstance } from 'sharp';
+
+creator.setImageManipulation((image:SharpInstance) => {
+  image.flop(true);
+});
+```
 
 # JavaScript
 
