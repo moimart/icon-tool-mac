@@ -6,7 +6,7 @@ import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
 import { ImageRLE } from './ImageRLE';
 
-export type ManipulationCallback = (image:sharp.SharpInstance) => void;
+export type ManipulationCallback = (image:sharp.SharpInstance,size:number) => void;
 export class IconCreatorSharp extends IconCreator {
   private useBuffer: boolean = false;
   private buffers: Map<string,Buffer> = new Map<string,Buffer>();
@@ -40,10 +40,6 @@ export class IconCreatorSharp extends IconCreator {
             image = sharp(this.buffer,{ density: 500 });
           } else {
             image = sharp(realFile,{ density: 500 });
-          }
-
-          if (this.manipulation !== null) {
-            this.manipulation(image);
           }
           
           const metadata:sharp.Metadata = await image.metadata().catch(err => reject(err)) as sharp.Metadata;
@@ -104,7 +100,10 @@ export class IconCreatorSharp extends IconCreator {
   private async createBuffers(image:sharp.SharpInstance) {
 
     for (let desc of IconDescriptor.createDescriptors()) {
-      const scaledImage = image.clone().resize(desc.size,desc.size);
+      let scaledImage = image.clone().resize(desc.size,desc.size);
+      if (this.manipulation !== null) {
+        this.manipulation(scaledImage,desc.size);
+      }
       if (desc.tag == "16x16" || desc.tag === "16x16@2x") {
         let buffer = await scaledImage.raw().toBuffer().catch(() => {}) as Buffer;
         this.buffers.set(desc.tag,ImageRLE.encodeRLE(this.swapChannels(buffer)));

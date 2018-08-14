@@ -1,6 +1,6 @@
 {
   "name": "icon-tool-mac",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Create .icns in any platform",
   "main": "index.js",
   "types": "lib/IconCreatorSharp.d.ts",
