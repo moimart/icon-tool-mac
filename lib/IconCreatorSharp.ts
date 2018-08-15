@@ -6,7 +6,7 @@ import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
 import { ImageRLE } from './ImageRLE';
 
-export type ManipulationCallback = (image:sharp.SharpInstance,size:number) => void;
+export type ManipulationCallback = (image:sharp.SharpInstance,size?:number) => void;
 export class IconCreatorSharp extends IconCreator {
   private useBuffer: boolean = false;
   private buffers: Map<string,Buffer> = new Map<string,Buffer>();

@@ -52,7 +52,7 @@ If you want to do additional image manipulations before creating the .icns:
 //Additional import
 import { SharpInstance } from 'sharp';
 
-creator.setImageManipulation((image:SharpInstance) => {
+creator.setImageManipulation((image:SharpInstance,size:number) => {
   image.flop(true);
 });
 ```
