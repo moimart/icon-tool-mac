@@ -5,6 +5,7 @@ import { promisfyNoError, promisfy } from 'promisfy';
 import * as Utils from './Utils';
 import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
+import Jimp = require('jimp');
 
 export class IconCreatorMemory extends IconCreator { 
   private useBuffer: boolean = false;
@@ -64,7 +65,7 @@ export class IconCreatorMemory extends IconCreator {
     }
   }
 
-  private async createBuffers(image:Jimp.Jimp) {
+  private async createBuffers(image:Jimp) {
 
     let descriptors = IconDescriptor.createDescriptors();
 

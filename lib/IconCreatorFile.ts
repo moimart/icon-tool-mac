@@ -5,6 +5,7 @@ import * as Icns from './IcnsWriter';
 import * as jimp from 'jimp';
 import { IconWriterNative } from './IcnsWriterNative';
 import { promisfyNoError, promisfy } from 'promisfy';
+import Jimp = require('jimp');
 
 export class IconCreatorFile extends IconCreator {
   private output?: string;
@@ -87,7 +88,7 @@ export class IconCreatorFile extends IconCreator {
     }
   }
 
-  private async createTmpFiles(tmpPath:string, image:Jimp.Jimp): Promise<void> {
+  private async createTmpFiles(tmpPath:string, image:Jimp): Promise<void> {
 
     let descriptors = IconDescriptor.createDescriptors();
 

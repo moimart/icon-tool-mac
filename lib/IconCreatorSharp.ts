@@ -6,7 +6,7 @@ import * as Icns from './IcnsWriter';
 import { IconWriterNative } from './IcnsWriterNative';
 import { ImageRLE } from './ImageRLE';
 
-export type ManipulationCallback = (image:sharp.SharpInstance,size?:number) => void;
+export type ManipulationCallback = (image:sharp.Sharp,size?:number) => void;
 export class IconCreatorSharp extends IconCreator {
   private useBuffer: boolean = false;
   private buffers: Map<string,Buffer> = new Map<string,Buffer>();
@@ -97,7 +97,7 @@ export class IconCreatorSharp extends IconCreator {
     return data;
   }
 
-  private async createBuffers(image:sharp.SharpInstance) {
+  private async createBuffers(image:sharp.Sharp) {
 
     for (let desc of IconDescriptor.createDescriptors()) {
       let scaledImage = image.clone().resize(desc.size,desc.size);
